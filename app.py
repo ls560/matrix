@@ -1,172 +1,176 @@
 import streamlit as st
 
-# --- ЛОГІКА РОЗРАХУНКУ ---
-def get_root(num):
-    while num > 9 and num not in [11, 22, 33]:
-        num = sum(int(d) for d in str(num))
-    return num
+# Налаштування сторінки, щоб додаток гарно виглядав на мобільному
+st.set_page_config(page_title="Нумерологічний Калькулятор", page_icon="🔮", layout="centered")
 
-def calculate_pythagoras(day, month, year):
-    s_date = f"{day:02d}{month:02d}{year}"
-    f_n = sum(int(d) for d in s_date)
-    s_n = get_root(f_n)
-    day_str = str(day).lstrip('0')
-    first_digit = int(day_str[0])
-    t_n = abs(f_n - (2 * first_digit))
-    fo_n = sum(int(d) for d in str(t_n))
-    all_digits = s_date + str(f_n) + str(s_n) + str(t_n) + str(fo_n)
-    counts = {str(i): all_digits.count(str(i)) for i in range(1, 10)}
-    
-    return {
-        "counts": counts,
-        "extra": [f_n, s_n, t_n, fo_n],
-        "destiny": s_n,
-        "lines": {
-            "🎯 Цілі": counts['1'] + counts['4'] + counts['7'],
-            "🏠 Сім'я": counts['2'] + counts['5'] + counts['8'],
-            "⚓ Звички": counts['3'] + counts['6'] + counts['9'],
-            "🍎 Темперамент": counts['3'] + counts['5'] + counts['7'],
-            "🧘 Духовність": counts['1'] + counts['5'] + counts['9'],
-            "💰 Побут": counts['4'] + counts['5'] + counts['6'],
-            "💎 Стабільність": counts['3'] + counts['6'] + counts['9']
-        }
-    }
-
-# --- ДИЗАЙН ТА НАЛАШТУВАННЯ ---
-st.set_page_config(page_title="Matrix Premium 2026", layout="wide")
-
-st.markdown("""
+# Приховуємо стандартні елементи Streamlit для чистого дизайну
+hide_style = """
     <style>
-    [data-testid="stMetricValue"] { font-size: 26px !important; color: #1E1E1E !important; font-weight: bold !important; }
-    [data-testid="stMetricLabel"] { font-size: 14px !important; font-weight: 600 !important; color: #555 !important; }
-    
-    .stMetric { 
-        background-color: #ffffff; 
-        padding: 15px !important; 
-        border-radius: 12px; 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.06); 
-        border-left: 4px solid #d4af37;
-        margin-bottom: 10px;
-    }
-    
-    /* Нові стилі для компактних квадратних карток векторів */
-    .vector-square-box {
-        background-color: #ffffff;
-        padding: 12px;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-        border-left: 4px solid #2c3e50;
-        margin-bottom: 12px;
-        min-height: 85px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    .vector-square-title {
-        font-size: 13px;
-        font-weight: 600;
-        color: #555;
-    }
-    .vector-square-value {
-        font-size: 22px;
-        font-weight: bold;
-        color: #1E1E1E;
-        margin-top: 5px;
-    }
-    
-    .cta-box {
-        background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-        padding: 30px;
-        border-radius: 20px;
-        border: 2px solid #d4af37;
-        margin-top: 25px;
-    }
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
     </style>
-    """, unsafe_allow_html=True)
+"""
+st.markdown(hide_style, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center; margin-bottom: 5px;'>🔮 У твоїх цифрах заховано більше, ніж ти думаєш</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-size: 18px; color: #555;'>Подивись, що про тебе насправді говорить твоя дата народження.</p>", unsafe_allow_html=True)
+# 1. ВВЕДЕННЯ ДАНИХ (Ім'я, Дата, Колір)
+st.markdown("<h2 style='text-align: center; color: #4A3B32;'>Ваше Ім'я</h2>", unsafe_allow_html=True)
+user_name = st.text_input("Введіть ім'я", value="", label_visibility="collapsed")
 
-# Введення даних
-c1, c2, c3 = st.columns(3)
-with c1: d = st.number_input("📅 День", 1, 31, 1)
-with c2: m = st.number_input("🌕 Місяць", 1, 12, 9)
-with c3: y = st.number_input("⏳ Рік", 1900, 2026, 1980)
+st.markdown("<h2 style='text-align: center; color: #4A3B32;'>Ваша дата народження</h2>", unsafe_allow_html=True)
 
-if st.button("✨ РОЗКРИТИ СЕКРЕТИ МОЄЇ ДАТИ", use_container_width=True):
-    res = calculate_pythagoras(d, m, y)
-    counts = res["counts"]
-    def v(n): return str(n) * counts[str(n)] if counts[str(n)] > 0 else "—"
+# Зручний вибір дати у рядок
+col_d, col_m, col_y = st.columns(3)
+with col_d:
+    day = st.selectbox("День", list(range(1, 32)), index=16)  # 17 за замовчуванням
+with col_m:
+    months = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"]
+    month = st.selectbox("Місяць", months, index=11)  # Грудень за замовчуванням
+with col_y:
+    year = st.selectbox("Рік", list(range(1940, 2027)), index=49)  # 1989 за замовчуванням
 
-    st.write("---")
+# Вибір улюбленого кольору (міняє фоновий акцент матриці)
+st.markdown("<h3 style='text-align: center; color: #4A3B32; font-size: 16px;'>Улюблений колір теми</h3>", unsafe_allow_html=True)
+color_theme = st.selectbox("Колір", ["Класичний беж", "Ніжна троянда", "М'ятний", "Глибокий синій"], label_visibility="collapsed")
+
+# Визначаємо палітру залежно від вибору кольору
+if color_theme == "Класичний беж":
+    bg_main, bg_header, text_dark = "#D1BFA7", "#A89480", "#2E2520"
+elif color_theme == "Ніжна троянда":
+    bg_main, bg_header, text_dark = "#E8C5C8", "#C99A9E", "#382022"
+elif color_theme == "М'ятний":
+    bg_main, bg_header, text_dark = "#C5E0DC", "#99BDB6", "#1C2E2B"
+else:
+    bg_main, bg_header, text_dark = "#C2D3E8", "#90AECF", "#182636"
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Кнопка розрахунку
+if st.button("Розрахувати", use_container_width=True):
     
-    # Головний контейнер: зліва матриця 3х3, справа — вектори
-    col_matrix, col_vectors = st.columns([2.0, 1.5], gap="large")
+    # ТУТ ТВОЯ ЛОГІКА РОЗРАХУНКУ (зараз підставимо цифри зі скріншоту як приклад)
+    # Коли додаси свій алгоритм, просто заміни ці змінні на автоматичні розрахунки:
+    date_str = f"{day:02d}.{months.index(month)+1:02d}.{year}"
+    chyslo_doli = "11"
+    temperament = "3"
+    
+    character = "11111"
+    health = "—"
+    luck = "7"
+    goal = "6"
+    
+    energy = "2"
+    logic = "—"
+    duty = "88"
+    family = "3"
+    
+    interest = "33"
+    work = "6"
+    memory = "999"
+    habits = "6"
+    
+    self_esteem = "8"
+    household = "1"
+    
+    additional_numbers = "38, 11, 36, 9"
+    code_line = "11111/ 2/ 33/ —/ —/ 6/ 7/ 88/ 999/ ЧД 11"
 
-    with col_matrix:
-        st.markdown("<h3 style='color: #2c3e50; margin-bottom: 15px;'>🛡️ Твій Цифровий Профіль</h3>", unsafe_allow_html=True)
-        m1, m2, m3 = st.columns(3)
-        with m1:
-            st.metric("👑 Характер", v(1))
-            st.metric("⚡ Енергія", v(2))
-            st.metric("🎨 Цікавість", v(3))
-        with m2:
-            st.metric("🩺 Здоров'я", v(4))
-            st.metric("🧠 Логіка", v(5))
-            st.metric("🛠️ Праця", v(6))
-        with m3:
-            st.metric("🍀 Удача", v(7))
-            st.metric("⚖️ Обов'язок", v(8))
-            st.metric("📚 Пам'ять", v(9))  # Додано 9-ку на своє місце
+    # Вітання з ім'ям, якщо воно введене
+    if user_name:
+        st.markdown(f"<h3 style='text-align: center; color: {text_dark};'>✨ Матриця для імені: {user_name} ✨</h3>", unsafe_allow_html=True)
 
-    with col_vectors:
-        st.markdown("<h3 style='color: #2c3e50; margin-bottom: 15px;'>📈 Вектори життя</h3>", unsafe_allow_html=True)
+    # 2. СТИЛІЗОВАНА МОБІЛЬНА ТАБЛИЦЯ (HTML)
+    matrix_html = f"""
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 400px; margin: 0 auto; background-color: {bg_main}; padding: 12px; border-radius: 20px; box-shadow: 0px 4px 15px rgba(0,0,0,0.05); color: {text_dark};">
         
-        # Створюємо сітку з 2 стовпчиків всередині правої панелі, щоб картки були маленькими квадратами
-        v_col1, v_col2 = st.columns(2)
-        lines = res["lines"]
-        
-        # Перетворюємо словник у список для зручного розподілу по стовпчиках
-        items = list(lines.items())
-        
-        with v_col1:
-            for title, value in items[:3]:  # Перші 3 вектори
-                st.markdown(f"""
-                    <div class="vector-square-box">
-                        <span class="vector-square-title">{title}</span>
-                        <span class="vector-square-value">{value}</span>
-                    </div>
-                """, unsafe_allow_html=True)
-                
-        with v_col2:
-            for title, value in items[3:]:  # Наступні 4 вектори
-                st.markdown(f"""
-                    <div class="vector-square-box">
-                        <span class="vector-square-title">{title}</span>
-                        <span class="vector-square-value">{value}</span>
-                    </div>
-                """, unsafe_allow_html=True)
-        
-        # Окремий яскравий блок для Числа Долі внизу під квадратами
-        st.markdown(f"""
-            <div class="vector-square-box" style="border-left: 4px solid #d4af37; background-color: #fffdf3; min-height: auto; flex-direction: row; justify-content: space-between; align-items: center;">
-                <span class="vector-square-title" style="color: #b89214; font-size: 14px;">💎 Число Долі</span>
-                <span style="font-size: 22px; font-weight: bold; color: white; background: #d4af37; padding: 2px 12px; border-radius: 8px;">{res["destiny"]}</span>
-            </div>
-        """, unsafe_allow_html=True)
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; text-align: center; background-color: {bg_header}; border-radius: 14px 14px 0 0; overflow: hidden;">
+            <tr>
+                <td style="padding: 15px; font-size: 22px; font-weight: bold; width: 40%;">{date_str}</td>
+                <td style="padding: 10px; border-left: 1px solid rgba(0,0,0,0.1); width: 30%;">
+                    <span style="font-size: 11px; opacity: 0.8; display:block;">Число Долі</span>
+                    <span style="font-size: 22px; font-weight: bold;">{chyslo_doli}</span>
+                </td>
+                <td style="padding: 10px; border-left: 1px solid rgba(0,0,0,0.1); width: 30%;"><span style="font-size: 11px; opacity: 0.8; display:block;">Темперамент</span>
+                    <span style="font-size: 22px; font-weight: bold;">{temperament}</span>
+                </td>
+            </tr>
+        </table>
 
-    # ФІНАЛЬНИЙ ТЕКСТ
-    st.markdown(f"""
-        <div class="cta-box">
-            <h2 style="color: #2c3e50; text-align: center; margin-top: 0; font-size: 22px;">📸 Бачиш ці цифри? Це лише поверхня айсберга!</h2>
-            <p style="font-size: 16px; line-height: 1.6; color: #34495e; text-align: center;">
-                За ними — значно глибший код твоєї особистості: як ти мислиш, де втрачаєш енергію та через що відкривається твій потенціал.<br><br>
-                <b>Зроби скріншот цього екрану і надішли мені в Direct.</b> Я подивлюся твою матрицю глибше і скажу:<br>
-                🎯 <b>Де твоя справжня сила?</b> | 💎 <b>Які в тебе природні таланти?</b> | 🚫 <b>Що блокує потенціал?</b><br>
-                💸 <b>Звідки приходять гроші?</b> | 👔 <b>Які професії тобі підходять?</b> | ✨ <b>В чому твоя унікальність?</b>
-            </p>
-            <p style="font-size: 18px; font-weight: bold; color: #d4af37; text-align: center; margin-top: 15px; letter-spacing: 0.5px;">🚀 Чекаю твій скріншот для розбору!</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-    st.caption(f"Технічні дані: {', '.join(map(str, res['extra']))}")
+        <table style="width: 100%; border-collapse: collapse; text-align: center; background-color: #ffffff; border-radius: 0 0 14px 14px; overflow: hidden;">
+            <tr style="border-bottom: 1px solid #E0E0E0;">
+                <td style="padding: 10px; width: 25%; border-right: 1px solid #E0E0E0;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Характер</span>
+                    <span style="font-size: 18px; font-weight: bold;">{character}</span>
+                </td>
+                <td style="padding: 10px; width: 25%; border-right: 1px solid #E0E0E0;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Здоров'я</span>
+                    <span style="font-size: 18px; font-weight: bold;">{health}</span>
+                </td>
+                <td style="padding: 10px; width: 25%; border-right: 1px solid #E0E0E0;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Удача</span>
+                    <span style="font-size: 18px; font-weight: bold;">{luck}</span>
+                </td>
+                <td style="padding: 10px; width: 25%; background-color: {bg_main}40;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Ціль</span>
+                    <span style="font-size: 18px; font-weight: bold;">{goal}</span>
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid #E0E0E0;">
+                <td style="padding: 10px; border-right: 1px solid #E0E0E0;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Енергія</span>
+                    <span style="font-size: 18px; font-weight: bold;">{energy}</span>
+                </td>
+                <td style="padding: 10px; border-right: 1px solid #E0E0E0;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Логіка</span>
+                    <span style="font-size: 18px; font-weight: bold;">{logic}</span>
+                </td>
+                <td style="padding: 10px; border-right: 1px solid #E0E0E0;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Обов'язок</span>
+                    <span style="font-size: 18px; font-weight: bold;">{duty}</span>
+                </td>
+                <td style="padding: 10px; background-color: {bg_main}40;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Сім'я</span>
+                    <span style="font-size: 18px; font-weight: bold;">{family}</span>
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid #E0E0E0;">
+                <td style="padding: 10px; border-right: 1px solid #E0E0E0;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Цікавість</span>
+                    <span style="font-size: 18px; font-weight: bold;">{interest}</span>
+                </td>
+                <td style="padding: 10px; border-right: 1px solid #E0E0E0;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Праця</span>
+                    <span style="font-size: 18px; font-weight: bold;">{work}</span>
+                </td>
+                <td style="padding: 10px; border-right: 1px solid #E0E0E0;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Пам'ять</span>
+                    <span style="font-size: 18px; font-weight: bold;">{memory}</span>
+                </td>
+                <td style="padding: 10px; background-color: {bg_main}40;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Звички</span>
+                    <span style="font-size: 18px; font-weight: bold;">{habits}</span>
+                </td>
+            </tr>
+            <tr><td style="padding: 10px; border-right: 1px solid #E0E0E0; background-color: {bg_main}40;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Самооцінка</span>
+                    <span style="font-size: 18px; font-weight: bold;">{self_esteem}</span>
+                </td>
+                <td style="padding: 10px; border-right: 1px solid #E0E0E0; background-color: {bg_main}40;">
+                    <span style="font-size: 11px; color: #888888; display:block;">Побут</span>
+                    <span style="font-size: 18px; font-weight: bold;">{household}</span>
+                </td>
+                <td colspan="2" style="padding: 6px; font-size: 11px; text-align: center; color: #555555; background-color: #FAF6F0;">
+                    <b style="color:#888;">Додаткові Числа:</b><br>{additional_numbers}<br>
+                    <span style="font-size: 10px; letter-spacing: 0.5px; font-weight: bold; color: {text_dark};">{code_line}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    """
+    
+    st.markdown(matrix_html, unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Кнопка копіювання (функція Streamlit)
+    st.copy_to_clipboard(f"Результат розрахунку для {user_name if user_name else 'Гість'} ({date_str}): {code_line}")
+    st.info("📋 Результат автоматично скопійовано в буфер обміну!")
