@@ -2,7 +2,7 @@ import streamlit as st
 
 # --- ЛОГІКА РОЗРАХУНКУ ---
 def get_root(num):
-    while num > 9:
+    while num > 9 and num not in [11, 22, 33]:
         num = sum(int(d) for d in str(num))
     return num
 
