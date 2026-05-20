@@ -178,7 +178,7 @@ if st.button("Розрахувати", use_container_width=True):
                 <td style="padding: 10px; width: 30%;"><span style="font-size: 11px; opacity: 0.85; display:block; margin-bottom: 2px;">Темперамент</span><span style="font-size: 22px; font-weight: bold;">{temperament}</span></td>
             </tr>
         </table>
-        <table style="width: 100%; border-collapse: collapse; text-align: center; background-color: #ffffff; border-radius: 0 0 16px 16px; overflow: hidden;">
+       <table style="width: 100%; border-collapse: collapse; text-align: center; background-color: #ffffff; border-radius: 0 0 16px 16px; overflow: hidden; position: relative; background-image: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)), url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"150\" viewBox=\"0 0 200 150\"><text x=\"30\" y=\"100\" fill=\"%23000000\" opacity=\"0.04\" font-family=\"sans-serif\" font-size=\"14\" font-weight=\"bold\" transform=\"rotate(-30 30 100)\">Light of my Shadow</text></svg>'); background-repeat: repeat;">
             <tr style="border-bottom: 1px solid #EAEAEA;">
                 <td style="padding: 12px 6px; width: 25%; border-right: 1px solid #EAEAEA;"><span style="font-size: 11px; color: #8A8A8F; display:block; margin-bottom: 4px;">Характер</span><span style="font-size: 18px; font-weight: bold; color: {text_color};">{character}</span></td>
                 <td style="padding: 12px 6px; width: 25%; border-right: 1px solid #EAEAEA;"><span style="font-size: 11px; color: #8A8A8F; display:block; margin-bottom: 4px;">Здоров'я</span><span style="font-size: 18px; font-weight: bold; color: {text_color};">{health}</span></td>
