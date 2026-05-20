@@ -15,6 +15,7 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         margin-top: 20px;
         text-align: center;
+        border: 1px solid #eee;
     }
     .watermark {
         margin-top: 15px;
