@@ -173,7 +173,10 @@ if st.button("Розрахувати", use_container_width=True):
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 100%; margin: 0 auto; background-color: {main_bg}; padding: 12px; border-radius: 24px; box-shadow: 0px 10px 25px rgba(0,0,0,0.08); color: {text_color};">
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; text-align: center; background-color: {header_bg}; border-radius: 16px 16px 0 0; overflow: hidden; color: #ffffff;">
             <tr>
-                <td style="padding: 16px 10px; font-size: 22px; font-weight: bold; width: 40%; border-right: 1px solid rgba(255,255,255,0.2);">{date_str}</td>
+                <td style="padding: 10px; font-size: 22px; font-weight: bold; width: 40%; border-right: 1px solid rgba(255,255,255,0.2);">
+    {date_str}
+    <div style="font-size: 9px; opacity: 0.7; font-style: italic; display: block; margin-top: -2px;">by light of my shadow</div>
+</td>
                 <td style="padding: 10px; border-right: 1px solid rgba(255,255,255,0.2); width: 30%;"><span style="font-size: 11px; opacity: 0.85; display:block; margin-bottom: 2px;">Колір / ЧД</span><span style="font-size: 16px; font-weight: bold;">{color_label} ({chyslo_doli})</span></td>
                 <td style="padding: 10px; width: 30%;"><span style="font-size: 11px; opacity: 0.85; display:block; margin-bottom: 2px;">Темперамент</span><span style="font-size: 22px; font-weight: bold;">{temperament}</span></td>
             </tr>
