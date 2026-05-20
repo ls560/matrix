@@ -1,6 +1,6 @@
 import streamlit as st
 
-# 1. НАЛАШТУВАННЯ СТОРІНКИ
+# 1. НАЛАШТУВАННЯ СТОРІНКИ ДЛЯ МОБІЛЬНИХ ПРИСТРОЇВ
 st.set_page_config(
     page_title="Нумерологічний Калькулятор", 
     page_icon="🔮", 
@@ -45,27 +45,52 @@ with col_m:
 with col_y:
     year = st.selectbox("Рік", list(range(1940, 2030)), index=49)
 
-# 3. ВИБІР УЛЮБЛЕНОГО КОЛОРУ (ТЕМИ) СПИСКОМ
+# 3. ВИБІР УЛЮБЛЕНОГО КОЛОРУ (9 КОЛЬОРІВ ВЕСЕЛКИ ТА ОСНОВНИХ)
 st.markdown("<h3 style='text-align: center; color: #4A3B32; font-size: 18px; margin-top: 15px; margin-bottom: 5px;'>Оберіть улюблений колір (тему):</h3>", unsafe_allow_html=True)
 theme_choice = st.selectbox(
     "Оберіть колір", 
-    ["Класичний беж", "Ніжна троянда", "Свіжа м'ята", "Шляхетний сірий"], 
+    [
+        "Червоний (Енергія)", 
+        "Помаранчевий (Оптимізм)", 
+        "Жовтий (Інтелект)", 
+        "Зелений (Баланс)", 
+        "Блакитний (Творчість)", 
+        "Синій (Мудрість)", 
+        "Фіолетовий (Інтуїція)",
+        "Ніжна троянда (Гармонія)",
+        "Класичний беж (Спокій)"
+    ], 
     label_visibility="collapsed"
 )
 
-# Визначаємо кольори та текстову мітку для картки залежно від вибору
-if theme_choice == "Класичний беж":
-    main_bg, header_bg, text_color, accent_bg = "#C4B29E", "#A3907C", "#2E2520", "#FAF6F0"
-    color_label = "Беж"
-elif theme_choice == "Ніжна троянда":
+# Палітра для кожного з 9 кольорів (основний фон, фон заголовка, колір тексту, акцентний світлий фон)
+if "Червоний" in theme_choice:
+    main_bg, header_bg, text_color, accent_bg = "#E5989B", "#B56576", "#3A0CA3", "#FFF0F3"
+    color_label = "Червоний"
+elif "Помаранчевий" in theme_choice:
+    main_bg, header_bg, text_color, accent_bg = "#FFB703", "#FB8500", "#1D3557", "#FEF9E7"
+    color_label = "Помаранчевий"
+elif "Жовтий" in theme_choice:
+    main_bg, header_bg, text_color, accent_bg = "#FFE494", "#FFC300", "#2B2D42", "#FFFDF3"
+    color_label = "Жовтий"
+elif "Зелений" in theme_choice:
+    main_bg, header_bg, text_color, accent_bg = "#A8DADC", "#457B9D", "#1D3557", "#F1FAEE"
+    color_label = "Зелений"
+elif "Блакитний" in theme_choice:
+    main_bg, header_bg, text_color, accent_bg = "#BDE0FE", "#A2D2FF", "#03045E", "#F8F9FA"
+    color_label = "Блакитний"
+elif "Синій" in theme_choice:
+    main_bg, header_bg, text_color, accent_bg = "#90E0EF", "#0077B6", "#03045E", "#CAF0F8"
+    color_label = "Синій"
+elif "Фіолетовий" in theme_choice:
+    main_bg, header_bg, text_color, accent_bg = "#D8BBFF", "#9D4EDD", "#240046", "#F7F4FA"
+    color_label = "Фіолетовий"
+elif "Ніжна троянда" in theme_choice:
     main_bg, header_bg, text_color, accent_bg = "#E5BFC3", "#C49297", "#3B2224", "#FDF8F9"
     color_label = "Рожевий"
-elif theme_choice == "Свіжа м'ята":
-    main_bg, header_bg, text_color, accent_bg = "#BBDCD5", "#91BAB2", "#1D332F", "#F5FAF9"
-    color_label = "М'ята"
 else:
-    main_bg, header_bg, text_color, accent_bg = "#CCD4DB", "#9FAAB5", "#242A30", "#F7FAFC"
-    color_label = "Сірий"
+    main_bg, header_bg, text_color, accent_bg = "#C4B29E", "#A3907C", "#2E2520", "#FAF6F0"
+    color_label = "Беж"
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -116,13 +141,12 @@ if st.button("Розрахувати", use_container_width=True):
     if user_name:
         st.markdown(f"<h3 style='text-align: center; color: {text_color}; font-weight: bold; margin-top: 10px;'>✨ {user_name} ✨</h3>", unsafe_allow_html=True)
         
-    # Формуємо HTML-код картки. Використовуємо потрійні подвійні лапки для уникнення конфліктів з inline-стилями.
     matrix_html = f"""
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 100%; margin: 0 auto; background-color: {main_bg}; padding: 12px; border-radius: 24px; box-shadow: 0px 10px 25px rgba(0,0,0,0.08); color: {text_color};">
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; text-align: center; background-color: {header_bg}; border-radius: 16px 16px 0 0; overflow: hidden; color: #ffffff;">
             <tr>
                 <td style="padding: 16px 10px; font-size: 22px; font-weight: bold; width: 40%; border-right: 1px solid rgba(255,255,255,0.2);">{date_str}</td>
-                <td style="padding: 10px; border-right: 1px solid rgba(255,255,255,0.2); width: 30%;"><span style="font-size: 11px; opacity: 0.85; display:block; margin-bottom: 2px;">Колір / ЧД</span><span style="font-size: 18px; font-weight: bold;">{color_label} ({chyslo_doli})</span></td>
+                <td style="padding: 10px; border-right: 1px solid rgba(255,255,255,0.2); width: 30%;"><span style="font-size: 11px; opacity: 0.85; display:block; margin-bottom: 2px;">Колір / ЧД</span><span style="font-size: 16px; font-weight: bold;">{color_label} ({chyslo_doli})</span></td>
                 <td style="padding: 10px; width: 30%;"><span style="font-size: 11px; opacity: 0.85; display:block; margin-bottom: 2px;">Темперамент</span><span style="font-size: 22px; font-weight: bold;">{temperament}</span></td>
             </tr>
         </table>
@@ -161,5 +185,6 @@ if st.button("Розрахувати", use_container_width=True):
     st.markdown(matrix_html, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     
-    st.copy_to_clipboard(f"Результат розрахунку для {user_name if user_name else 'Гість'} ({date_str}), колір: {theme_choice}: {code_line}")
-    st.success("📋 Результат скопійовано!")
+    # Замість проблемної функції використовуємо надійний текстовий блок, з якого користувач може легко скопіювати в один клік
+    st.info("👇 Скопіюйте результат для відправки:")
+    st.code(f"Результат розрахунку для {user_name if user_name else 'Гість'} ({date_str}), улюблений колір: {color_label}\nРозрахунок: {code_line}")
