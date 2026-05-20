@@ -26,14 +26,42 @@ st.markdown("""
     .stApp {
         background-color: #FAF6F0;
     }
+    .top-promo-text {
+        text-align: center; 
+        color: #4A3B32; 
+        font-size: 15px; 
+        font-weight: 500;
+        line-height: 1.4;
+        margin-bottom: 20px;
+        background-color: #F3EFE9;
+        padding: 12px;
+        border-radius: 14px;
+        border-left: 4px solid #A3907C;
+    }
+    .bottom-promo-text {
+        text-align: center; 
+        color: #2E2520; 
+        font-size: 14px; 
+        font-weight: bold;
+        line-height: 1.5;
+        margin-top: 20px;
+        background: linear-gradient(135deg, #FFF0F3 0%, #FAF6F0 100%);
+        padding: 15px;
+        border-radius: 18px;
+        box-shadow: 0px 4px 15px rgba(0,0,0,0.03);
+        border: 1px dashed #C49297;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# 2. ПОЛЯ ВВЕДЕННЯ ДАНИХ
-st.markdown("<h3 style='text-align: center; color: #4A3B32; font-size: 20px; margin-bottom: 5px;'>Ваше Ім'я</h3>", unsafe_allow_html=True)
+# 2. МАРКЕТИНГОВИЙ ТЕКСТ ЗВЕРХУ СТОРІНКИ
+st.markdown('<div class="top-promo-text">🔮 Твоя дата народження це більше ніж просто цифри — введи свою дату та подивись, що приховує твоя матриця</div>', unsafe_allow_html=True)
+
+# 3. ПОЛЯ ВВЕДЕННЯ ДАНИХ
+st.markdown("<h3 style='text-align: center; color: #4A3B32; font-size: 18px; margin-bottom: 5px;'>Ваше Ім'я</h3>", unsafe_allow_html=True)
 user_name = st.text_input("Ім'я", value="", placeholder="Введіть ваше ім'я...", label_visibility="collapsed")
 
-st.markdown("<h3 style='text-align: center; color: #4A3B32; font-size: 20px; margin-top: 15px; margin-bottom: 5px;'>Ваша дата народження</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center; color: #4A3B32; font-size: 18px; margin-top: 12px; margin-bottom: 5px;'>Ваша дата народження</h3>", unsafe_allow_html=True)
 
 # 3 випадаючі списки для дати в один рядок
 col_d, col_m, col_y = st.columns(3)
@@ -45,8 +73,8 @@ with col_m:
 with col_y:
     year = st.selectbox("Рік", list(range(1940, 2030)), index=49)
 
-# 3. ВИБІР УЛЮБЛЕНОГО КОЛОРУ (9 КОЛЬОРІВ ВЕСЕЛКИ ТА ОСНОВНИХ)
-st.markdown("<h3 style='text-align: center; color: #4A3B32; font-size: 18px; margin-top: 15px; margin-bottom: 5px;'>Оберіть улюблений колір (тему):</h3>", unsafe_allow_html=True)
+# 4. ВИБІР УЛЮБЛЕНОГО КОЛОРУ (БЕЗ СЛОВА ТЕМА)
+st.markdown("<h3 style='text-align: center; color: #4A3B32; font-size: 16px; margin-top: 15px; margin-bottom: 5px;'>Оберіть ваш улюблений колір:</h3>", unsafe_allow_html=True)
 theme_choice = st.selectbox(
     "Оберіть колір", 
     [
@@ -63,7 +91,7 @@ theme_choice = st.selectbox(
     label_visibility="collapsed"
 )
 
-# Палітра для кожного з 9 кольорів (основний фон, фон заголовка, колір тексту, акцентний світлий фон)
+# Палітра для кожного з 9 кольорів
 if "Червоний" in theme_choice:
     main_bg, header_bg, text_color, accent_bg = "#E5989B", "#B56576", "#3A0CA3", "#FFF0F3"
     color_label = "Червоний"
@@ -183,8 +211,16 @@ if st.button("Розрахувати", use_container_width=True):
     """
     
     st.markdown(matrix_html, unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
     
-    # Замість проблемної функції використовуємо надійний текстовий блок, з якого користувач може легко скопіювати в один клік
-    st.info("👇 Скопіюйте результат для відправки:")
-    st.code(f"Результат розрахунку для {user_name if user_name else 'Гість'} ({date_str}), улюблений колір: {color_label}\nРозрахунок: {code_line}")
+    # 5. НОВИЙ ЗАКЛИК ДО ДІЇ ЗНИЗУ (ЗАМІСТЬ БЛОКУ КОПІЮВАННЯ)
+    st.markdown("""
+        <div class="bottom-promo-text">
+            🚀 Бачиш ці цифри? Це лише поверхня айсберга! <br><br>
+            📸 <b>Зроби скріншот</b> цієї карти та надішли мені в <b>Direct</b>. <br><br>
+            Я подивлюся твою матрицю глибше і скажу: <br>
+            • де твоя справжня сила 💪<br>
+            • як у тебе працюють гроші 💸<br>
+            • які в тебе приховані таланти 🌟<br>
+            • і що саме зараз блокує твій потенціал! 🔓
+        </div>
+    """, unsafe_allow_html=True)
